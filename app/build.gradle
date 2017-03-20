@@ -18,13 +18,57 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildTypes.each {
+        it.buildConfigField('String', 'BACKEND_ROOT_ADDRESS', backEndRootAddress)
+    }
+
+    productFlavors {
+        free {
+            applicationIdSuffix "free"
+        }
+
+        paid {
+            applicationIdSuffix "paid"
+        }
+    }
 }
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    //Regular
+    compile 'com.android.support:appcompat-v7:25.3.0'
+    compile 'com.google.code.findbugs:jsr305:2.0.1'
+
+    //Attention! both lines bellow were not set by the Wizard!
+    //It is necessary for accessing google api client objects (see the code on the AsyncTask implementation)
+    compile 'com.google.api-client:google-api-client:1.22.0'
+    compile 'com.google.http-client:google-http-client-android:1.22.0'
+
+    //Dependent projects
+    compile project(':jokeshower')
+    compile project(path: ':backend', configuration: 'android-endpoints')
+
+    //Configuring testing
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.android.support:appcompat-v7:25.2.0'
-    compile 'com.google.android.gms:play-services-ads:10.2.0'
+
+    //Configuring flavours
+    freeCompile 'com.google.android.gms:play-services-ads:10.2.0'
+
+}
+
+task tieItAllTogether {
+
+    group 'Udacity Optional'
+    description 'Theses tasks are optional for the final project!'
+
+    dependsOn  =  [":backend:appengineStartBackend", ":app:connectedAndroidTest"]
+    finalizedBy ":backend:appengineStopBackend"
+
+    doLast {
+        println "This is my 'Tie it All together' task!"
+    }
 }
