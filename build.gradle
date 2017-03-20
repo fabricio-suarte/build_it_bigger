@@ -19,3 +19,16 @@ allprojects {
         maven { url 'https://repo.gradle.org/gradle/libs-releases' }
     }
 }
+
+task tieItAllTogether {
+
+    group 'Udacity Optional'
+    description 'Theses tasks are optional for the final project!'
+
+    dependsOn  =  [":backend:appengineStartBackend", ":app:connectedAndroidTest"]
+    finalizedBy ":backend:appengineStopBackend"
+
+    doLast {
+        println "This is my 'Tie it All together' task!"
+    }
+}

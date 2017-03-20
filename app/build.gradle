@@ -59,16 +59,3 @@ dependencies {
     freeCompile 'com.google.android.gms:play-services-ads:10.2.0'
 
 }
-
-task tieItAllTogether {
-
-    group 'Udacity Optional'
-    description 'Theses tasks are optional for the final project!'
-
-    dependsOn  =  [":backend:appengineStartBackend", ":app:connectedAndroidTest"]
-    finalizedBy ":backend:appengineStopBackend"
-
-    doLast {
-        println "This is my 'Tie it All together' task!"
-    }
-}
